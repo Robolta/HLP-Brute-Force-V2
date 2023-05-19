@@ -1,0 +1,45 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'hlp_rust_testing_2'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=hlp_rust_testing_2",
+                    "--package=hlp_rust_testing_2"
+                ],
+                "filter": {
+                    "name": "hlp_rust_testing_2",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'hlp_rust_testing_2'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=hlp_rust_testing_2",
+                    "--package=hlp_rust_testing_2"
+                ],
+                "filter": {
+                    "name": "hlp_rust_testing_2",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
