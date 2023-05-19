@@ -115,7 +115,7 @@ Currently it's only really feasible to store 2 or 3 deep at most, given the spac
 ### Intermediate Outputs
 
 Storing outputs between each pair of layers avoids having to recompute them.  
-It's also significant in the Legality optimization.
+It's also significant in the Mismapped Input Check.
 
 ### Distinct Value Check
 
@@ -128,7 +128,7 @@ Functions which map two inputs to the same output which are different outputs in
 There is no way to separate the two values once they've reached the same value.  
 This works along with the Intermediate Output optimization to do more than verify the final output (which generally isn't worth doing over simply checking if it's the solution).
 This enables us to check intermediate outputs when they are first generated and easily skip large sections rather than simply iterating the very end.
-Unfortunately, this optimization is dependant on starting from the input, meaning it cannot be applied to unique layers the same as Group Check.
+Unfortunately, this optimization is dependant on starting from the input, meaning it cannot be applied to unique layers the same as Distinct Value Check.
 From my testing, this check tends to fail before others at the same leve, so I recommend putting it first.
 
 ### Output Depth Caching
@@ -140,7 +140,7 @@ This means we can skip that intermediate output and iterate at the relevant laye
 ### Pairwise Iteration
 
 Each layer has a set of layers which can follow it, this is generally smaller than the set of all unique layers.  
-Similar to Unique Layers, we can apply a Group Check but not Function Legality since their location isn't defined.
+Similar to Unique Layers, we can apply a Distinct Value Check but not Mismapped Input Check since their location isn't defined.
 It is important to remember that some pairs can have no child pairs to follow it.
 This doesn't mean you can discard the layer, as it can still go on the output end, but be careful trying to iterate over its 0 children.
 
