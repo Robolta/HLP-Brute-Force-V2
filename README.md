@@ -129,12 +129,18 @@ This works along with the Intermediate Output optimization to do more than verif
 This enables us to check intermediate outputs when they are first generated and easily skip large sections rather than simply iterating the very end.
 Unfortunately, this optimization is dependant on starting from the input, meaning it cannot be applied to unique layers the same as Group Check.
 
+### Output Depth Caching
+
+By storing the intermediate outputs in an LRU cache, we can check and see if a smaller depth was recorded for the same output.
+If the stored depth is better, then that means our current candidate can't possibly outdo it, even if that output is part of the solution.
+This means we can skip that intermediate output and iterate at the relevant layer.
+
 ### Pairwise Iteration
 
 Each layer has a set of layers which can follow it, this is generally smaller than the set of all unique layers.  
 Similar to Unique Layers, we can apply a Group Check but not Function Legality since their location isn't defined.
 
-### Union-Intersection
+### Union-Intersection (Unimplemented)
 
 A more complicated optimization where the idea is to check if the current function can reach the output in 1 more layer.  
 This is done by pre-computing a 2D array of vectors where every possible input-output pair is represented.  
