@@ -12,7 +12,7 @@ An optimized brute force program created to find solutions for the Hex Layer Pro
     - Unique Layers
         - Unique Functions
     - Intermediate Outputs
-    - Group Check
+    - Distinct Value Check
     - Mismapped Inputs
     - Output Depth Caching
     - Pairwise Iteration
@@ -117,7 +117,7 @@ Currently it's only really feasible to store 2 or 3 deep at most, given the spac
 Storing outputs between each pair of layers avoids having to recompute them.  
 It's also significant in the Legality optimization.
 
-### Group Check
+### Distinct Value Check
 
 An intermediate output can't reach the target if it has less output values than the target does.  
 This is a simple check that can be applied even on the unique layers, since it isn't dependant on location within the function.
