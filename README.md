@@ -13,7 +13,7 @@ An optimized brute force program created to find solutions for the Hex Layer Pro
         - Unique Functions
     - Intermediate Outputs
     - Group Check
-    - Function Legality
+    - Mismapped Inputs
     - Output Depth Caching
     - Pairwise Iteration
     - Union-Intersection (Unimplemented)
@@ -122,13 +122,14 @@ It's also significant in the Legality optimization.
 An intermediate output can't reach the target if it has less output values than the target does.  
 This is a simple check that can be applied even on the unique layers, since it isn't dependant on location within the function.
 
-### Function Legality
+### Mismapped Inputs
 
 Functions which map two inputs to the same output which are different outputs in the target, are not valid as intermediate outputs.  
 There is no way to separate the two values once they've reached the same value.  
 This works along with the Intermediate Output optimization to do more than verify the final output (which generally isn't worth doing over simply checking if it's the solution).
 This enables us to check intermediate outputs when they are first generated and easily skip large sections rather than simply iterating the very end.
 Unfortunately, this optimization is dependant on starting from the input, meaning it cannot be applied to unique layers the same as Group Check.
+From my testing, this check tends to fail before others at the same leve, so I recommend putting it first.
 
 ### Output Depth Caching
 
@@ -140,6 +141,8 @@ This means we can skip that intermediate output and iterate at the relevant laye
 
 Each layer has a set of layers which can follow it, this is generally smaller than the set of all unique layers.  
 Similar to Unique Layers, we can apply a Group Check but not Function Legality since their location isn't defined.
+It is important to remember that some pairs can have no child pairs to follow it.
+This doesn't mean you can discard the layer, as it can still go on the output end, but be careful trying to iterate over its 0 children.
 
 ### Union-Intersection (Unimplemented)
 
