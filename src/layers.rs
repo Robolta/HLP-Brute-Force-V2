@@ -1,10 +1,12 @@
-use crate::constants::*;
 use itertools::Itertools;
 use lazy_static::lazy_static;
 use std::{cmp::max, collections::HashSet, fmt};
 
+use crate::constants::*;
+
 lazy_static! {
     pub static ref UNIQUE_LAYERS: Vec<Layer> = Layer::generate_unique();
+    pub static ref UNION_INTER: [[Vec<usize>; STATES]; STATES] = generate_union_inter();
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -140,4 +142,30 @@ fn comparator(back: u64, side: u64, mode: bool) -> u64 {
         return back - side;
     }
     back
+}
+
+fn generate_union_inter() -> [[Vec<usize>; STATES]; STATES] {
+    if DEBUG == 2 { println!("\t[generate_union_inter] Generating Union-Intersection..."); }
+    let target_set: HashSet<&u64> = TARGET.iter().collect();
+    let mut end_layers = Vec::new();
+    for layer in UNIQUE_LAYERS.iter() {
+        let layer_set: HashSet<&u64> = layer.output.iter().collect();
+        if target_set.is_subset(&layer_set) {
+            end_layers.push(layer);
+        }
+    }
+
+    let mut union_iter: [[Vec<usize>; STATES]; STATES] = Default::default();
+    for input in 0..STATES { // Input Starting Value
+        for current in 0..STATES { // Current Value of Input
+            for layer in &end_layers { // Only checking valid end layers (has all target output values)
+                if layer.output[current] == TARGET[input] { // If the layer can take the current value to the target value, then add it to the vector
+                    union_iter[input][current].push(layer.unique_index);
+                }
+            }
+        }
+    }
+    if DEBUG == 2 { println!("\t[generate_union_inter] Finished Union-Intersection"); }
+
+    union_iter
 }
