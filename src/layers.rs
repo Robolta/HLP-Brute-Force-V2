@@ -42,6 +42,7 @@ impl Layer {
                 } else {
                     let next_layer = UNIQUE_LAYERS[options[self.pair_index + 1]];
                     self.output = next_layer.output;
+                    self.state = next_layer.state;
                     self.unique_index = next_layer.unique_index;
                     self.pair_index += 1;
                     true
