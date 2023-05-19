@@ -16,7 +16,7 @@ An optimized brute force program created to find solutions for the Hex Layer Pro
     - Mismapped Inputs
     - Output Depth Caching
     - Pairwise Iteration
-    - Union-Intersection (Unimplemented)
+    - Union-Intersection
 
 ## The Hex Layer Problem
 *What is the Hex Layer Problem anyway?*
@@ -143,7 +143,7 @@ Similar to Unique Layers, we can apply a Distinct Value Check but not Mismapped 
 It is important to remember that some pairs can have no child pairs to follow it.
 This doesn't mean you can discard the layer, as it can still go on the output end, but be careful trying to iterate over its 0 children.
 
-### Union-Intersection (Unimplemented)
+### Union-Intersection
 
 A more complicated optimization where the idea is to check if the current function can reach the output in 1 more layer.  
 This is done by pre-computing a 2D array of vectors where every possible input-output pair is represented.  
@@ -151,3 +151,4 @@ For a given input-output pair, the layers within the vector are ones which would
 The check is performed by using the current function's input-output pairs to get 16 corresponding vectors, then checking if the vectors share at least 1 common element.  
 If this check succeeds, the check can be ignored for the rest of the depth.  
 However, the current depth still needs to be searched entirely in order to avoid missing a potentially shorter solution.
+In my program, I implement this check without skipping every other depth by excluding the basic equality check between the target and candidate.
