@@ -23,21 +23,21 @@ fn main() {
             pair_count += children.len();
         }
 
-        println!("[main] Total Pairs: {}", pair_count);
-        println!("[main] Finished Pre-calculations ({:?})", start.elapsed());
+        println!("[main] Total Pairs: {}", comma_separated(pair_count));
+        println!("[main] Finished Pre-calculations ({:?})\n", start.elapsed());
         println!("[main] Starting Search (Depth: 1)");
     }
 
     let start = Instant::now();
 
-    let mut count = 0;
-    let mut last_depth = 0;
+    let mut count: u64 = 0;
+    let mut last_depth = 1;
     let mut candidate_function = Function::new();
     loop {
         if candidate_function.layers.len() != last_depth {
             last_depth = candidate_function.layers.len();
             println!("[main] Search time elapsed: {:?}", start.elapsed());
-            println!("[main] Candidates Checked at the Top: {}", count);
+            println!("[main] Candidates Checked at the Top: {}", comma_separated(count));
         }
         if candidate_function.outputs[0] == TARGET { break; }
         count += 1;
@@ -49,4 +49,20 @@ fn main() {
         print!("{} ", layer.state);
     }
     println!("\n[main] Solution Output: {:?}", candidate_function.outputs[0]);
+}
+
+fn comma_separated<T: std::fmt::Display>(number: T) -> String {
+    let mut result = String::new();
+    let number_string = number.to_string();
+
+    let mut count = 0;
+    for digit in number_string.chars().rev() {
+        if count != 0 && count % 3 == 0 {
+            result.insert(0, ',');
+        }
+        result.insert(0, digit);
+        count += 1;
+    }
+
+    result
 }
