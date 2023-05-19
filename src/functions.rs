@@ -1,13 +1,18 @@
 use std::{num::NonZeroUsize, time::Instant};
 use itertools::Itertools;
 
-use crate::{constants::{STATES, ASCENDING, TARGET_DISTINCT, DEBUG, MISMAPS}, layers::{UNIQUE_LAYERS, Layer}, pairs::{VALID_PARENT_LAYERS, LAYER_PAIRS}};
+use crate::{
+    constants::{STATES, ASCENDING, TARGET_DISTINCT, DEBUG, MISMAPS},
+    layers::{UNIQUE_LAYERS, Layer},
+    pairs::{VALID_PARENT_LAYERS, LAYER_PAIRS},
+};
 
 #[derive(Debug)]
 pub struct Function {
     pub layers: Vec<Layer>,
     pub outputs: Vec<[u64; STATES]>,
-    pub cache: lru::LruCache<[u64; STATES], usize>,
+    pub cache: lru::LruCache<[u64; STATES], usize>, // Cache for best depth of an output
+    pub cache_2: lru::LruCache<[u64; STATES], usize>, // Cache for best depth of an output at this depth (unimplemented) (Once I stop using a given output, I can add it to the cache and avoid visiting it again)
 }
 
 impl Function {
@@ -15,23 +20,33 @@ impl Function {
         Self {
             layers: vec![UNIQUE_LAYERS[0]],
             outputs: vec![UNIQUE_LAYERS[0].output],
-            cache: lru::LruCache::new(NonZeroUsize::new(10000).unwrap()),
+            cache: lru::LruCache::new(NonZeroUsize::new(1000000).unwrap()),
+            cache_2: lru::LruCache::new(NonZeroUsize::new(1000000).unwrap()),
         }
+    }
+
+    pub fn add_layer(&mut self, layer: Layer) {
+        self.layers.insert(0, layer);
+        self.outputs.insert(0, layer.pass(self.outputs[0]));
     }
     
     pub fn next(&mut self, depth: usize) {
         let start = Instant::now();
 
         if depth == self.layers.len() { // Increase depth
-            if DEBUG == 3 { println!("\t[Function.next] +Increase depth to {} ({:?})", depth + 1, start.elapsed()); }
+            if DEBUG == 2 {
+                println!("\t[Function.next] Increase depth to {}", depth + 2);
+            } else if DEBUG == 3 {
+                println!("\t[Function.next] +Increase depth to {} ({:?})", depth + 2, start.elapsed());
+            }
             self.layers.push(UNIQUE_LAYERS[VALID_PARENT_LAYERS[0]]);
             self.outputs.push(self.layers[depth - 1].output);
             return;
         }
 
-        let options = if depth == self.layers.len() - 1 { None } else { Some(&LAYER_PAIRS[self.layers[depth + 1].unique_index]) };
+        let options = if depth == self.layers.len() - 1 { None } else { Some(&LAYER_PAIRS[self.layers[depth + 1].unique_index]) }; // Use pairwise unless input-end layer
         if self.layers[depth].next(options) { // Successful layer iteration
-            //if DEBUG == 3 { println!("\t[Function.next] +Successful iteration ({:?})", start.elapsed()); }
+            if DEBUG == 3 { println!("\t[Function.next] +Successful iteration ({:?})", start.elapsed()); }
             let input = if depth == self.layers.len() - 1 { ASCENDING } else { self.outputs[depth + 1] };
             self.outputs[depth] = self.layers[depth].pass(input);
             return;
@@ -43,7 +58,7 @@ impl Function {
 
             let parent_output = self.outputs[depth + 1];
 
-            for (a, mismap_indices) in MISMAPS.iter().enumerate() { // Mismapped index check
+            for (a, mismap_indices) in MISMAPS.iter().enumerate() { // Mismapped input check
                 for b in mismap_indices {
                     if parent_output[a] == parent_output[*b] {
                         if DEBUG == 3 { println!("\t[Function.next] -Mismapped values ({:?})", start.elapsed()); }

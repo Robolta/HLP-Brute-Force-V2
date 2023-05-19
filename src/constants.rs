@@ -45,7 +45,7 @@ const fn target_distinct() -> usize {
 
 fn generate_mismaps() -> Vec<Vec<usize>> {
     let mut mismaps = Vec::new();
-    for a in 0..16 {
+    for a in 0..STATES {
         mismaps.push(Vec::new());
         for b in 0..a {
             if TARGET[a] != TARGET[b] { mismaps[a].push(b); }
@@ -59,6 +59,7 @@ fn generate_mismaps() -> Vec<Vec<usize>> {
 const DECIMAL_PI:       [u64; STATES] = [ 3,  1,  4,  1,  5,  9,  2,  6,  5,  3,  5,  8,  9,  7,  9,  3]; // Pi           9 - 19 layers
 const MULTIPLES_6:      [u64; STATES] = [ 0,  6,  2,  8,  4,  0,  6,  2,  8,  4,  0,  6,  2,  8,  4,  0]; // 6 * i % 10   7 - 14 layers
 const FLOOR_HALF:       [u64; STATES] = [ 0,  0,  1,  1,  2,  2,  3,  3,  4,  4,  5,  5,  6,  6,  7,  7]; // i // 2       7+ layers
+const GRAY_CODE:        [u64; STATES] = [ 0,  1,  3,  2,  6,  7,  5,  4, 12, 13, 15, 14, 10, 11,  9,  8]; // Gray Code
 
 // Testing
 const ONE_LAYER:        [u64; STATES] = [ 4,  4,  4,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0, 13, 14, 15]; // 1 layer      13,4;
