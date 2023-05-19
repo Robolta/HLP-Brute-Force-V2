@@ -1,10 +1,11 @@
 use crate::{
-    constants::{ASCENDING, STATES, TARGET_DISTINCT, DEBUG},
+    constants::{TARGET_DISTINCT, DEBUG},
+    //constants::{ASCENDING, STATES},
     layers::{UNIQUE_LAYERS},
 };
 use itertools::Itertools;
 use lazy_static::lazy_static;
-use std::collections::HashSet;
+//use std::collections::HashSet;
 
 lazy_static! {
     pub static ref LAYER_PAIRS: Vec<Vec<usize>> = generate_pairs();
@@ -14,8 +15,8 @@ lazy_static! {
 pub fn generate_pairs() -> Vec<Vec<usize>> {
     if DEBUG == 2 { println!("\t[Pairs::generate_pairs] Generating Layer Pairs..."); }
     let mut pairs = Vec::new();
-    let mut covered: HashSet<[u64; STATES]> = HashSet::new();
-    covered.insert(ASCENDING);
+    //let mut covered: HashSet<[u64; STATES]> = HashSet::new();
+    //covered.insert(ASCENDING);
 
     for parent_index in 0..UNIQUE_LAYERS.len() {
         let parent_layer = &UNIQUE_LAYERS[parent_index];
