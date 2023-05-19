@@ -14,8 +14,9 @@ An optimized brute force program created to find solutions for the Hex Layer Pro
     - Intermediate Outputs
     - Group Check
     - Function Legality
+    - Output Depth Caching
     - Pairwise Iteration
-    - Union-Intersection
+    - Union-Intersection (Unimplemented)
 
 ## The Hex Layer Problem
 *What is the Hex Layer Problem anyway?*
