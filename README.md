@@ -56,14 +56,13 @@ Within my program, comparators are represented by the following function.
 
 ```rust
 // Implementation of a Minecraft Redstone Comparator
-pub fn comparator (back: i16, side: i16, mode: bool) -> i16 {
-    if side > back {
+fn comparator(back: u64, side: u64, mode: bool) -> u64 {
+    if back < side {
         return 0;
     } else if mode {
         return back - side;
-    } else {
-        return back;
     }
+    back
 }
 ```
 
